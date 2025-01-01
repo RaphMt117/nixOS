@@ -33,7 +33,7 @@
       homeDirectory = "/home/raphmt";
 
       packages = [
-        inputs.ghostty.packages."${pkgs.system}".default
+        # inputs.ghostty.packages."${pkgs.system}".default
         pkgs.steam
       ];
 
