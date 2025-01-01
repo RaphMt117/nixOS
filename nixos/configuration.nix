@@ -114,7 +114,7 @@
 
     "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
 
-    "nixos-config=${config.users.users.raphmt.home}/nix-home/nixos/configuration.nix"
+    "nixos-config=${config.users.users.raphmt.home}/nixconfig/nixos/configuration.nix"
 
     "/nix/var/nix/profiles/per-user/root/channels"
 
