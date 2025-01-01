@@ -113,6 +113,7 @@
       pkgs.ripgrep
       pkgs.tmux
       pkgs.discord
+      pkgs.gnumake
       pkgs.speedtest-cli
       pkgs.qbittorrent
       pkgs.home-manager.packages.${pkgs.system}.default
