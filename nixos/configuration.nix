@@ -1,12 +1,11 @@
 # ‘nixos-help’
 
-{ config, pkgs, inputs, outputs, ... }:
+{ config, pkgs, inputs, lib, outputs, ... }:
 
 {
   imports =
     [
       ./hardware-configuration.nix
-      ../home-manager/home.nix
     ];
 
 
@@ -14,19 +13,27 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Enable Flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.package = pkgs.nixVersions.stable;
-  nix.extraOptions = ''
-    experimental-features = nix-command flakes
-  '';
+  nix =
+    let
+      flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+    in
+    {
+      package = pkgs.nixVersions.stable;
+      nixPath = [
+        "nixos-config=/users/raphmt/nixconfig/nixos/configuration.nix"
+        "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
+        "/nix/var/nix/profiles/per-user/root/channels"
 
-  home-manager = {
-    extraSpecialArgs = { inherit inputs outputs; };
-    users = {
-      raphmt = import ../home-manager/home.nix;
+      ];
+      settings = {
+        # Enable flakes and new 'nix' command
+        experimental-features = "nix-command flakes";
+        # Workaround for https://github.com/NixOS/nix/issues/9574
+        nix-path = config.nix.nixPath;
+      };
+      # Opinionated: disable channels
+      channel.enable = false;
     };
-  };
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -101,24 +108,14 @@
     home = "/home/raphmt";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = [
+      pkgs.kdePackages.kate
       pkgs.git
-      pkgs.neovim
-      pkgs.unzip
       pkgs.zsh
-      pkgs.home-manager.packages.${pkgs.system}.default
+      # pkgs.home-manager.packages.${pkgs.system}.default
     ];
     shell = pkgs.zsh;
   };
 
-  nix.nixPath = [
-
-    "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
-
-    "nixos-config=${config.users.users.raphmt.home}/nixconfig/nixos/configuration.nix"
-
-    "/nix/var/nix/profiles/per-user/root/channels"
-
-  ];
 
   programs.firefox.enable = true;
   programs.git.enable = true;
