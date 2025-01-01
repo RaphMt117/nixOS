@@ -32,11 +32,26 @@
       username = "raphmt";
       homeDirectory = "/home/raphmt";
 
-      packages = [
+      packages = with pkgs; [
         # inputs.ghostty.packages."${pkgs.system}".default
-        pkgs.steam
+        steam
+        gnumake
+        kdePackages.kate
+        neovim
+        firefox
+        git
+        eza
+        gcc
+        unzip
+        zip
+        cargo
+        ripgrep
+        tmux
+        discord
+        gnumake
+        speedtest-cli
+        qbittorrent
       ];
-
     };
 
   programs =

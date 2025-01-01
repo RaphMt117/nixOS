@@ -98,24 +98,13 @@
   users.users.raphmt = {
     isNormalUser = true;
     description = "Rafael Torres";
-    home = "/home/raphmmt";
+    home = "/home/raphmt";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = [
-      pkgs.kdePackages.kate
-      pkgs.neovim
-      pkgs.firefox
       pkgs.git
-      pkgs.eza
-      pkgs.gcc
+      pkgs.neovim
       pkgs.unzip
-      pkgs.zip
-      pkgs.cargo
-      pkgs.ripgrep
-      pkgs.tmux
-      pkgs.discord
-      pkgs.gnumake
-      pkgs.speedtest-cli
-      pkgs.qbittorrent
+      pkgs.zsh
       pkgs.home-manager.packages.${pkgs.system}.default
     ];
     shell = pkgs.zsh;
