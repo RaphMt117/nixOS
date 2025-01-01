@@ -1,19 +1,32 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# ‘nixos-help’
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, outputs, ... }:
 
 {
-	imports =
-		[ # Include the results of the hardware scan.
-		./hardware-configuration.nix
-		];
+  imports =
+    [
+      ./hardware-configuration.nix
+      ../home-manager/home.nix
+    ];
 
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Enable Flakes
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.package = pkgs.nixVersions.stable;
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+
+  home-manager = {
+    extraSpecialArgs = { inherit inputs outputs; };
+    users = {
+      raphmt = import ../home-manager/home.nix;
+    };
+  };
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -50,7 +63,6 @@
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
-
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -88,29 +100,50 @@
     description = "Rafael Torres";
     home = "/home/raphmmt";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      kdePackages.kate
-      neovim
-      firefox
-      git
-      eza
+    packages = [
+      pkgs.kdePackages.kate
+      pkgs.neovim
+      pkgs.firefox
+      pkgs.git
+      pkgs.eza
+      pkgs.gcc
+      pkgs.unzip
+      pkgs.zip
+      pkgs.cargo
+      pkgs.ripgrep
+      pkgs.tmux
+      pkgs.discord
+      pkgs.speedtest-cli
+      pkgs.qbittorrent
+      pkgs.home-manager.packages.${pkgs.system}.default
     ];
+    shell = pkgs.zsh;
   };
 
-   nix.nixPath = [
+  nix.nixPath = [
 
-	"nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
+    "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
 
-	"nixos-config=${config.users.users.raphmt.home}/nix-home/nixos/configuration.nix"
+    "nixos-config=${config.users.users.raphmt.home}/nix-home/nixos/configuration.nix"
 
-	"/nix/var/nix/profiles/per-user/root/channels"
+    "/nix/var/nix/profiles/per-user/root/channels"
 
-];
+  ];
 
-  # Install firefox.
   programs.firefox.enable = true;
-  programs.git = {
+  programs.git.enable = true;
+
+  programs.zsh = {
     enable = true;
+    ohMyZsh.enable = true;
+
+    ohMyZsh.plugins = [
+      "zsh-vi-mode"
+      "zsh-autosuggestions"
+      "zsh-256color"
+      "zsh-syntax-highlighting"
+      "agnoster-nanof"
+    ];
   };
 
   # Allow unfree packages
