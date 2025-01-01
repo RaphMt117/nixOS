@@ -5,69 +5,39 @@
 , ...
 }: {
 
-  # You can import other home-manager modules here
   imports = [
-    # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
-    ./packages/qbittorrent/qbittorrent.nix
+    ./packages
+    ./home-packages.nix
   ];
 
-  nixpkgs = {
-    # You can add overlays here
-    overlays = [
-      # TODO: learn about
-      # If you want to use overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-    ];
-
-    config = {
-      allowUnfree = true;
-      # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = _: true;
-    };
-  };
+  fonts.fontconfig.enable = true;
 
   home =
     {
       username = "raphmt";
       homeDirectory = "/home/raphmt";
-
-      packages = with pkgs; [
-        # inputs.ghostty.packages."${pkgs.system}".default
-        steam
-        gnumake
-        kdePackages.kate
-        neovim
-        firefox
-        git
-        eza
-        gcc
-        unzip
-        zip
-        cargo
-        ripgrep
-        tmux
-        discord
-        gnumake
-        speedtest-cli
-        qbittorrent
-      ];
+      stateVersion = "23.05";
     };
 
   programs =
     {
       neovim.enable = true;
-      git = {
-        enable = true;
-        userName = "RaphMt117";
-        userEmail = "rafa.mtorres117@outlook.com";
-      };
+
+      zsh =
+        {
+          enable = true;
+          oh-my-zsh.enable = true;
+
+          oh-my-zsh.plugins = [
+            "zsh-vi-mode"
+            "zsh-autosuggestions"
+            "zsh-completions"
+            "zsh-256color"
+            "zsh-syntax-highlighting"
+          ];
+        };
     };
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
-
-  # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  home.stateVersion = "23.05";
 }
