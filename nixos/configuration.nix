@@ -32,7 +32,7 @@
         nix-path = config.nix.nixPath;
       };
       # Opinionated: disable channels
-      channel.enable = false;
+      channel.enable = true;
     };
 
   networking.hostName = "nixos"; # Define your hostname.
@@ -104,7 +104,6 @@
       pkgs.kdePackages.kate
       pkgs.git
       pkgs.zsh
-      # pkgs.home-manager.packages.${pkgs.system}.default
     ];
     shell = pkgs.zsh;
   };
@@ -113,17 +112,10 @@
   programs.firefox.enable = true;
   programs.git.enable = true;
 
+  environment.shells = with pkgs; [ zsh ];
+  users.defaultUserShell = pkgs.zsh;
   programs.zsh = {
     enable = true;
-    ohMyZsh.enable = true;
-
-    ohMyZsh.plugins = [
-      "zsh-vi-mode"
-      "zsh-autosuggestions"
-      "zsh-256color"
-      "zsh-syntax-highlighting"
-      "agnoster-nanof"
-    ];
   };
 
   # Allow unfree packages

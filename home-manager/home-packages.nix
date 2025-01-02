@@ -34,7 +34,7 @@
     zip
 
     # Coding stuff
-    ghostty
+    # ghostty
     git
     vscode
     tmux

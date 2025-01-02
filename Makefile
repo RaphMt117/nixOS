@@ -1,9 +1,10 @@
-.PHONY: update
-update:
-	# home-manager switch --flake .#raphmt@nixos
-	sudo nixos-rebuild switch --flake .
+.PHONY: upgrade
+upgrade:
+	# Update config
+	sudo nixos-rebuild switch --flake .#nixos
 
 
 .PHONY: clean
 clean:
+	# Clear old packages
 	nix-collect-garbage -d
